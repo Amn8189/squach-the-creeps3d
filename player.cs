@@ -4,6 +4,7 @@ using System;
 public partial class Player : CharacterBody3D
 {
 	int speed = 40;
+	Vector3 velocity = new Vector3(0,0,0);
 
 	public override void _PhysicsProcess(double delta)
 	{	
@@ -12,24 +13,29 @@ public partial class Player : CharacterBody3D
 		
 		if (Input.IsActionPressed("moveLeft"))
 		{
-			direction.X = -1;
+			direction.X -= 1;
 		}
 		if (Input.IsActionPressed("moveRight"))
 		{
-			direction.X = 1;
+			direction.X += 1;
 		}
 		if (Input.IsActionPressed("moveFront"))
 		{
-			direction.Z = -1;
+			direction.Z -= 1;
 		}
 		if (Input.IsActionPressed("moveBack"))
 		{
-			direction.Z = 1;
+			direction.Z += 1;
 		}
 		
+		if(direction!=new Vector3(0,0,0))
+		{
+			direction = direction.Normalized();
+		}
+		
+		velocity = direction * speed;
+		
 		GetNode<Node3D>("Node3D").Basis = Basis.LookingAt(direction);
-
-		Vector3 velocity = direction * speed;
 		
 		if (IsOnFloor())
 		{
