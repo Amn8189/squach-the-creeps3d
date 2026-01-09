@@ -11,6 +11,7 @@ public partial class Player : CharacterBody3D
 		Vector3 direction = new Vector3(0,0,0); //(x,y,z)
 		
 		
+		
 		if (Input.IsActionPressed("moveLeft"))
 		{
 			direction.X -= 1;
@@ -33,9 +34,15 @@ public partial class Player : CharacterBody3D
 			direction = direction.Normalized();
 		}
 		
-		velocity = direction * speed;
+		velocity.X = direction.X * speed;
+		velocity.Z = direction.Z * speed;
 		
-		GetNode<Node3D>("Node3D").Basis = Basis.LookingAt(direction);
+		if(direction != Vector3.Zero)
+		{
+			GetNode<Node3D>("Node3D").Basis = Basis.LookingAt(direction);
+		}
+		
+		
 		
 		if (IsOnFloor())
 		{
@@ -43,7 +50,12 @@ public partial class Player : CharacterBody3D
 		} 
 		else
 		{
-			velocity.Y -= 100;
+			velocity.Y -= 5;
+		}
+		
+		if (IsOnFloor() && Input.IsActionPressed("jump"))
+		{
+			velocity.Y = 50;
 		}
 		
 		Velocity = velocity;
